@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	lessons.FuncExample()
+	lessons.DeferExample()
 }
