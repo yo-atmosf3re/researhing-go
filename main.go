@@ -1,5 +1,7 @@
 package main
 
-func main() {
+import "researching-go/lessons"
 
+func main() {
+	lessons.PointersExample()
 }
