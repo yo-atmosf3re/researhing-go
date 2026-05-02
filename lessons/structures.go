@@ -2,7 +2,7 @@ package lessons
 
 import "researching-go/pkg/logger"
 
-type User struct {
+type user struct {
 	Name        string  // ""
 	Age         int     // 0
 	PhoneNumber string  // ""
@@ -10,7 +10,7 @@ type User struct {
 	Rating      float64 // 0
 }
 
-func (user User) data() {
+func (user user) data() {
 	logger.Pt("user data: ", user)
 }
 
@@ -19,24 +19,24 @@ func newUser(
 	age int,
 	phoneNumber string,
 	isClose bool,
-	rating float64) *User {
+	rating float64) *user {
 	if name == "" {
 		logger.Pt("new: name is empty. Create new user is stopped!")
-		return &User{}
+		return &user{}
 	}
 	if age > 150 || age < 0 {
 		logger.Pt("new: age is not correctly because it's less than 0 or more 150. Create new user is stopped!")
-		return &User{}
+		return &user{}
 	}
 	if phoneNumber == "" {
 		logger.Pt("new: phone number i empty. Create new user is stopped!")
-		return &User{}
+		return &user{}
 	}
 	if rating > 10.0 || rating < 0.0 {
 		logger.Pt("new: rating is not correctly because it's less than 0 or more 10.0. Create new user is stopped!")
-		return &User{}
+		return &user{}
 	}
-	return &User{
+	return &user{
 		Name:        name,
 		Age:         age,
 		PhoneNumber: phoneNumber,
@@ -45,7 +45,7 @@ func newUser(
 	}
 }
 
-func (user *User) setName(name string) {
+func (user *user) setName(name string) {
 	if name != "" {
 		user.Name = name
 		logger.Pt("set name: ", user.Name)
@@ -54,7 +54,7 @@ func (user *User) setName(name string) {
 	}
 }
 
-func (user *User) setAge(age int) {
+func (user *user) setAge(age int) {
 	if age <= 0 || age > 150 {
 		logger.Pt("set age: age is not valid")
 		return
@@ -63,7 +63,7 @@ func (user *User) setAge(age int) {
 	user.Age = age
 }
 
-func (user *User) setPhoneNumber(phoneNumber string) {
+func (user *user) setPhoneNumber(phoneNumber string) {
 	if phoneNumber == "" || len(phoneNumber) != 12 {
 		logger.Pt("set phone: phone number is invalid")
 	} else {
@@ -72,7 +72,7 @@ func (user *User) setPhoneNumber(phoneNumber string) {
 	}
 }
 
-func (user *User) setIsClose(isClose bool) {
+func (user *user) setIsClose(isClose bool) {
 	if user.IsClose == isClose {
 		logger.Pt("set isClose: operation is already completed")
 		return
@@ -81,7 +81,7 @@ func (user *User) setIsClose(isClose bool) {
 	user.IsClose = isClose
 }
 
-func (user *User) setRating(rating float64) {
+func (user *user) setRating(rating float64) {
 	if rating <= 10.0 && rating >= 0.0 {
 		user.Rating = rating
 		logger.Pt("user set rating: ", user.Rating)

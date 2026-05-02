@@ -6,27 +6,27 @@ import (
 	"researching-go/pkg/logger"
 )
 
-type PaymentMethods interface {
+type paymentMethods interface {
 	Pay(amount int) int
 	Cancel() int
 	GetId() int
 }
 
-type Payment struct {
+type payment struct {
 	name       string
 	id         int
 	balance    int
 	isCanceled bool
 }
 
-type PaymentInfo struct {
-	payments map[int]PaymentMethods
+type paymentInfo struct {
+	payments map[int]paymentMethods
 }
 
-func NewPayment(name string, balance int) *Payment {
+func newPayment(name string, balance int) *payment {
 	if name != "" {
 		logger.Ptc("new payment created: ", name)
-		return &Payment{
+		return &payment{
 			name:       name,
 			id:         rand.Intn(15),
 			balance:    balance,
@@ -37,11 +37,11 @@ func NewPayment(name string, balance int) *Payment {
 	return nil
 }
 
-func NewPaymentInfo() *PaymentInfo {
-	return &PaymentInfo{payments: make(map[int]PaymentMethods)}
+func mewPaymentInfo() *paymentInfo {
+	return &paymentInfo{payments: make(map[int]paymentMethods)}
 }
 
-func (payment *Payment) Pay(amount int) int {
+func (payment *payment) Pay(amount int) int {
 	if payment.balance <= -1000 {
 		payment.Cancel()
 		logger.Ptc("balance is so small, pay is canceled: ", payment.name)
@@ -52,7 +52,7 @@ func (payment *Payment) Pay(amount int) int {
 	return payment.id
 }
 
-func (payment *Payment) Cancel() int {
+func (payment *payment) Cancel() int {
 
 	if payment.isCanceled {
 		logger.Ptc("operation already is canceled")
@@ -63,21 +63,21 @@ func (payment *Payment) Cancel() int {
 	return payment.id
 }
 
-func (payment *Payment) GetId() int {
+func (payment *payment) GetId() int {
 	return payment.id
 }
 
-func (info *PaymentInfo) AddInfo(payment PaymentMethods) {
-	if p, ok := payment.(*Payment); ok {
+func (info *paymentInfo) AddInfo(pt paymentMethods) {
+	if p, ok := pt.(*payment); ok {
 		logger.Ptc("add payment info: ", p.name)
-		info.payments[p.id] = payment
+		info.payments[p.id] = pt
 		return
 	}
 	logger.Ptc("add new info: error has occurred")
 	return
 }
 
-func (info *PaymentInfo) Info(id int) PaymentMethods {
+func (info *paymentInfo) Info(id int) paymentMethods {
 	if payment, ok := info.payments[id]; ok {
 		logger.Ptc("data of payment by id: ", payment)
 		return payment
@@ -86,7 +86,7 @@ func (info *PaymentInfo) Info(id int) PaymentMethods {
 	return nil
 }
 
-func (info *PaymentInfo) AllInfo() map[int]PaymentMethods {
+func (info *paymentInfo) AllInfo() map[int]paymentMethods {
 	if len(info.payments) == 0 {
 		logger.Ptc("no payments")
 		return nil
@@ -95,16 +95,16 @@ func (info *PaymentInfo) AllInfo() map[int]PaymentMethods {
 	return info.payments
 }
 
-var paymentInfo *PaymentInfo = NewPaymentInfo()
+var newPaymentInfo *paymentInfo = mewPaymentInfo()
 
-func PaymentTransaction(payment PaymentMethods) {
-	if p, ok := payment.(*Payment); ok {
+func paymentTransaction(pt paymentMethods) {
+	if p, ok := pt.(*payment); ok {
 		logger.Ptc("current payment: ", p)
-		logger.Ptc("new payment info is created: ", paymentInfo)
+		logger.Ptc("new payment info is created: ", newPaymentInfo)
 
 		p.Pay(11000)
-		paymentInfo.AddInfo(p)
-		paymentInfo.Info(p.id)
+		newPaymentInfo.AddInfo(p)
+		newPaymentInfo.Info(p.id)
 
 		pId := p.Pay(100)
 		fmt.Printf("payment %d was denied, maybe trouble with balance", pId)
@@ -116,11 +116,11 @@ func PaymentTransaction(payment PaymentMethods) {
 }
 
 func PaymentExample() {
-	PaymentTransaction(NewPayment("Bank", 10000))
-	PaymentTransaction(NewPayment("Crypto", 200))
-	PaymentTransaction(NewPayment("PayPal", 5))
-	logger.Ptc("payment info, result :", paymentInfo)
-	ps := ConvertMapToSlicePaymentInfo(paymentInfo)
+	paymentTransaction(newPayment("Bank", 10000))
+	paymentTransaction(newPayment("Crypto", 200))
+	paymentTransaction(newPayment("PayPal", 5))
+	logger.Ptc("payment info, result :", newPaymentInfo)
+	ps := convertMapToSlicePaymentInfo(newPaymentInfo)
 
 	r1 := searchPaymentViaSlice(1, ps)
 	r2 := searchPaymentViaSlice(2, ps)
@@ -135,8 +135,8 @@ func PaymentExample() {
 	logger.Ptc("founded slice-payment: ", r5)
 }
 
-func ConvertMapToSlicePaymentInfo(paymentInfo *PaymentInfo) []PaymentMethods {
-	var paymentInfoSlice []PaymentMethods
+func convertMapToSlicePaymentInfo(paymentInfo *paymentInfo) []paymentMethods {
+	var paymentInfoSlice []paymentMethods
 	for _, p := range paymentInfo.payments {
 		paymentInfoSlice = append(paymentInfoSlice, p)
 	}
@@ -144,7 +144,7 @@ func ConvertMapToSlicePaymentInfo(paymentInfo *PaymentInfo) []PaymentMethods {
 	return paymentInfoSlice
 }
 
-func searchPaymentViaSlice(id int, ps []PaymentMethods) PaymentMethods {
+func searchPaymentViaSlice(id int, ps []paymentMethods) paymentMethods {
 	for _, p := range ps {
 		if p.GetId() == id {
 			return p

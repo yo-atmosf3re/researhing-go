@@ -37,7 +37,7 @@ func baseWorkWithStaticArray() {
 		}
 	}
 
-	userArray := [3]User{{
+	userArray := [3]user{{
 		Name:        "Alex",
 		Age:         25,
 		PhoneNumber: "+79999992277",
@@ -79,12 +79,12 @@ func baseWorkWithStaticArray() {
 }
 
 func workWithSlice() {
-	userArray := []User{}
+	userArray := []user{}
 	logger.Ptc("slice is created when we didnt type length of array inside square brackets", userArray, "- it's empty slice struct of User")
 	// slice have ability to increase itself capacity when we put some value inside it. when length of slice (len) is increased, this slice increase itself capacity is 2 times from previous length - current length 4, capacity 5, +2 to length, capacity is increased *2 => capacity is 10 and length is 6.
 	logger.Ptc("len, cap before: ", len(userArray), cap(userArray))
 
-	userArray = append(userArray, User{
+	userArray = append(userArray, user{
 		Name:        "Alex",
 		Age:         18,
 		PhoneNumber: "+79998887766",
